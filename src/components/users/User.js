@@ -1,21 +1,19 @@
-import React, { Fragment, Component } from "react";
+import React, { Fragment,useEffect } from "react";
 import Spinner from "../layout/loader";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Repos from "../repos/Repos";
-export default class User extends Component {
-  componentDidMount() {
-    this.props.getUser("Freeman-Nkosi");
-    this.props.getUserRepos("Freeman-Nkosi");
-    
-  }
+const User =({user,loading, getUser,getUserRepos,match,repos})=> {
+ 
+ useEffect(()=>{
+  getUser(match.params.username);
+  getUserRepos(match.params.username);
+  // eslint-disable-next-line
+ },[])
+ 
 
-  static propTypes = {
-    loading: PropTypes.bool.isRequired,
-    user: PropTypes.object.isRequired,
-    getUser: PropTypes.func.isRequired,
-  };
-  render() {
+ 
+  
     
 
     const {
@@ -32,8 +30,8 @@ export default class User extends Component {
       public_repos,
       public_gists,
       hireable,
-    } = this.props.user;
-   const { loading,repos } = this.props;
+    } = user;
+  
 
     if (loading) return <Spinner />;
     return (
@@ -104,4 +102,10 @@ export default class User extends Component {
       </Fragment>
     );
   }
-}
+
+User.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  user: PropTypes.object.isRequired,
+  getUser: PropTypes.func.isRequired,
+};
+export default User;
