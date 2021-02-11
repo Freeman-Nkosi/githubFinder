@@ -11,20 +11,29 @@ import User from "./components/users/User";
 class App extends React.Component {
   state = {
     users: [],
-    user:{},
+    user: {},
     loading: false,
     alert: null,
+    repos: [],
   };
-//Get a single github user
-getUser= async username =>{
-  console.log("username is: ",username)
-  this.setState({ loading: true });
+
+  //Get users repos
+  getUserRepos = async (username) => {
+ 
+    this.setState({ loading: true });
+    let res = await axios.get(`https://api.github.com/users/${username}/repos?per_page=5&sort=created:asc&client_id${process.env.REACT_APP_GITHUB_CLIENT_ID}&
+  client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
+  this.setState({repos:res.data,loading:false})
+  };
+  //Get a single github user
+  getUser = async (username) => {
+   
+    this.setState({ loading: true });
     let res = await axios.get(`https://api.github.com/users/${username}?client_id${process.env.REACT_APP_GITHUB_CLIENT_ID}&
 client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
     console.log(res.data);
     this.setState({ user: res.data, loading: false });
-    console.log("search: ", this.state.users);
-} 
+  };
   setAlert = (msg, type) => {
     this.setState({ alert: { msg, type } });
     setTimeout(() => {
@@ -32,7 +41,6 @@ client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
     }, 1000);
   };
   searchUsers = async (search) => {
-    
     this.setState({ loading: true });
     let res = await axios.get(`https://api.github.com/search/users?q=${search}&client_id${process.env.REACT_APP_GITHUB_CLIENT_ID}&
 client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
@@ -72,12 +80,21 @@ client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`);
                   </Fragment>
                 )}
               />
-              <Route exact path='/about' component={About}/>
-              <Route exact patch='/user/:username' render={
-              props=>(
-                <User {...props} getUser={this.getUser}  user={this.state.user} loading={this.state.loading}/>
-              )
-              }/>
+              <Route exact path="/about" component={About} />
+              <Route
+                exact
+                patch="/user/:username"
+                render={(props) => (
+                  <User
+                    {...props}
+                    getUser={this.getUser}
+                    getUserRepos={this.getUserRepos}
+                    repos={this.state.repos}
+                    user={this.state.user}
+                    loading={this.state.loading}
+                  />
+                )}
+              />
             </Switch>
           </div>
         </div>
