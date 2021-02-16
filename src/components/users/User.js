@@ -1,19 +1,21 @@
-import React, { Fragment,useEffect } from "react";
+import React, { Fragment,useEffect,useContext } from "react";
 import Spinner from "../layout/loader";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Repos from "../repos/Repos";
-const User =({user,loading, getUser,getUserRepos,match,repos})=> {
- 
+import GithubContext from '../../context/github/githubContext'
+const User =({match})=> {
+ const githubContext= useContext(GithubContext);
  useEffect(()=>{
-  getUser(match.params.username);
-  getUserRepos(match.params.username);
+   
+  githubContext.getUser(match.params.username);
+ githubContext.getUserRepos(match.params.username);
   // eslint-disable-next-line
  },[])
  
 
  
-  
+  const{loading,user,repos}=githubContext;
     
 
     const {

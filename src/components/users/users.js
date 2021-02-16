@@ -1,7 +1,10 @@
-import React from 'react'
-import UserItem from './userItem'
-import Loader from '../layout/loader'
-export  const users = ({users,loading}) => {
+import React,{useContext}from 'react';
+import UserItem from './userItem';
+import Loader from '../layout/loader';
+import GithubContext from '../../context/github/githubContext'
+export  const Users = () => {
+    const githubConext=useContext(GithubContext);
+    const {loading,users} = githubConext;
 console.log("Loading ",loading)
     if(loading){
 return(<div><Loader/> </div>)
@@ -26,4 +29,4 @@ const userStyle={
 }
 
 
-export default users;
+export default Users;

@@ -1,9 +1,13 @@
-import React, { useState} from "react";
-
-const Search = ({ setAlert, searchUsers }) => {
+import React, { useState,useContext} from "react";
+import GithubContext from '../../context/github/githubContext';
+import AlertContext from '../../context/alert/alertContext'
+const Search = ({ setAlert }) => {
   const [search,setSearch]=useState('');
+  const githubContext=useContext(GithubContext);
+  const alertContext=useContext(AlertContext);
  const clearUsers = () => {
     setSearch('');
+    githubContext.clearUsers();
   };
  const onChange = (e) => {
     setSearch(e.target.value);
@@ -11,9 +15,10 @@ const Search = ({ setAlert, searchUsers }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     if (search === "") {
-      setAlert("Please enter a user", "light");
+  
+     alertContext.setAlert("Please enter a user", "light");
     } else {
-      searchUsers(search);
+      githubContext.searchUsers(search);
     }
   };
 
